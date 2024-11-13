@@ -17,24 +17,30 @@
 . Introducción al objeto global window (BOM)
 . Introducción a la API Web DOM
 
-CLASE 2
-Introducción al DOM
-DOM
-Accediendo a elementos del DOM
-Manipulación del DOM
-Aplicación avanzada del DOM
-Eventos, ¿cómo entenderlos?
-Eventos
-Qué es un callback?
-Eventos en HTML y el DOM
-ApiEventTarget
-Introducción a la API Web EventTarget
-El objeto Event
-Introducción a la propagación de eventos
-Aplicación avanzada de propagación de eventos
-Eventos con comportamiento automático
-Manipulación de DOM en un evento de BOM
-CLASE 3
+## CLASE 2
+
+### Introducción al DOM
+
+. DOM
+. Accediendo a elementos del DOM
+. Manipulación del DOM
+. Aplicación avanzada del DOM
+
+## Eventos, ¿cómo entenderlos?
+
+. Eventos
+. Qué es un callback?
+. Eventos en HTML y el DOM
+. ApiEventTarget
+. Introducción a la API Web EventTarget
+. El objeto Event
+. Introducción a la propagación de eventos
+. Aplicación avanzada de propagación de eventos
+. Eventos con comportamiento automático
+. Manipulación de DOM en un evento de BOM
+
+## CLASE 3
+
 Introducción a Formularios
 Formularios
 El evento Submit
