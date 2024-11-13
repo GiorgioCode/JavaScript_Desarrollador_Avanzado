@@ -227,7 +227,7 @@
 -   Como utilizar las cookies usando Javascript
 -   Introducción a medición de performance
 
-## CLASE 12 - [VER CONTENIDO](content/clase_11.js)
+## CLASE 12 - [VER CONTENIDO](content/clase_12.js)
 
 ### Aprendiendo NodeJS
 
