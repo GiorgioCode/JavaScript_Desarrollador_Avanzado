@@ -17,7 +17,7 @@
 -   Introducción al objeto global window (BOM)
 -   Introducción a la API Web DOM
 
-## CLASE 2
+## CLASE 2 - [VER CONTENIDO](content/clase_02.js)
 
 ### Introducción al DOM
 
@@ -39,7 +39,7 @@
 -   Eventos con comportamiento automático
 -   Manipulación de DOM en un evento de BOM
 
-## CLASE 3
+## CLASE 3 - [VER CONTENIDO](content/clase_03.js)
 
 ### Introducción a Formularios
 
@@ -65,7 +65,7 @@
 -   Qué es un Header
 -   Javascript asincrónico
 
-## CLASE 4
+## CLASE 4 - [VER CONTENIDO](content/clase_04.js)
 
 ### Comenzando a trabajar con AJAX
 
@@ -82,7 +82,7 @@
 -   Aplicaciones de XHR y el DOM
 -   Manejo de archivos
 
-## CLASE 5
+## CLASE 5 - [VER CONTENIDO](content/clase_05.js)
 
 ### Páginas SPA
 
@@ -107,7 +107,7 @@
 -   Introducción a JSONP
 -   Implementando JSONP con AJAX
 
-## CLASE 6
+## CLASE 6 - [VER CONTENIDO](content/clase_06.js)
 
 ### Eventos importantes para la navegación
 
@@ -129,7 +129,7 @@
 -   Implementación de FormData sin formulario
 -   Implementación de FormData con XHR
 
-## CLASE 7
+## CLASE 7 - [VER CONTENIDO](content/clase_07.js)
 
 ### Trabajo Asincrónico
 
@@ -152,7 +152,7 @@
 -   Encadenamiento múltiple de pedidos por Fetch
 -   Operaciones
 
-## CLASE 8
+## CLASE 8 - [VER CONTENIDO](content/clase_08.js)
 
 ### Paradigmas
 
@@ -174,7 +174,7 @@
 -   El ámbito de una función
 -   El contexto de una función
 
-## CLASE 9
+## CLASE 9 - [VER CONTENIDO](content/clase_09.js)
 
 ### Modelo Clásico
 
@@ -193,7 +193,7 @@
 -   Metodos de Class
 -   Herencia
 
-## CLASE 10
+## CLASE 10 - [VER CONTENIDO](content/clase_10.js)
 
 ### Trabajo con Clases
 
@@ -211,7 +211,7 @@
 -   Introduccion y problematica del Patron de Publicación y Suscripción
 -   Iteradores y generadores
 
-## CLASE 11
+## CLASE 11 - [VER CONTENIDO](content/clase_11.js)
 
 ### Almacenamiento Local
 
@@ -227,7 +227,7 @@
 -   Como utilizar las cookies usando Javascript
 -   Introducción a medición de performance
 
-## CLASE 12
+## CLASE 12 - [VER CONTENIDO](content/clase_11.js)
 
 ### Aprendiendo NodeJS
 
