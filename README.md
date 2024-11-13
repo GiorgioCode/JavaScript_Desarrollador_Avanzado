@@ -1,6 +1,6 @@
 # Bienvenidos al curso de Javascript Desarrollador Avanzado
 
-## CLASE 1 [VER DETALLES](content/clase_01.js)
+## CLASE 1 - [VER CONTENIDO](content/clase_01.js)
 
 ### Empezando a trabajar
 
