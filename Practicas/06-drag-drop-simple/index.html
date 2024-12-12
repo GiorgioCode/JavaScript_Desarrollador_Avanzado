@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo Drag and Drop</title>
+    <style>
+        /* Contenedor principal: Centra todo el contenido y establece un ancho máximo */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        /* 
+        * Zonas donde se pueden arrastrar y soltar elementos
+        * - border dashed: crea un borde punteado para indicar que es una zona interactiva
+        * - min-height: asegura que la zona sea visible incluso cuando está vacía
+        * - transition: suaviza los cambios de color de fondo
+        */
+        .drop-zone {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            margin: 10px 0;
+            min-height: 100px;
+            background-color: #f8f9fa;
+            transition: background-color 0.3s;
+        }
+
+        /* 
+        * Estilo aplicado cuando un elemento está siendo arrastrado sobre la zona
+        * Cambia el color de fondo y el borde para dar feedback visual
+        */
+        .drop-zone.dragover {
+            background-color: #e9ecef;
+            border-color: #6c757d;
+        }
+
+        /* 
+        * Elementos que se pueden arrastrar
+        * - cursor: move -> cambia el cursor para indicar que el elemento es arrastrable
+        * - display: inline-block -> permite que los elementos se alineen horizontalmente
+        * - transition: añade una animación suave al escalar el elemento
+        */
+        .draggable {
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 5px;
+            cursor: move;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        /* 
+        * Estilo aplicado mientras el elemento está siendo arrastrado
+        * - opacity: hace el elemento semitransparente
+        * - transform: reduce ligeramente el tamaño del elemento
+        */
+        .draggable.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Ejemplo de Drag and Drop</h2>
+
+        <!-- 
+            Zona de origen: contiene los elementos arrastrables inicialmente
+            Cada elemento tiene el atributo draggable="true" para habilitarlo para arrastrar 
+        -->
+        <div id="sourceZone" class="drop-zone">
+            <h3>Elementos arrastrables:</h3>
+            <div class="draggable" draggable="true">Elemento 1 🎯</div>
+            <div class="draggable" draggable="true">Elemento 2 🎨</div>
+            <div class="draggable" draggable="true">Elemento 3 🎮</div>
+        </div>
+
+        <!-- Zona de destino: aquí se pueden soltar los elementos arrastrados -->
+        <div id="targetZone" class="drop-zone">
+            <h3>Suelta los elementos aquí:</h3>
+        </div>
+    </div>
+
+    <script>
+        // Seleccionamos todos los elementos que tienen la clase 'draggable'
+        const draggables = document.querySelectorAll('.draggable');
+        // Seleccionamos todas las zonas donde se pueden soltar elementos
+        const dropZones = document.querySelectorAll('.drop-zone');
+
+        // Configuramos los eventos para cada elemento arrastrable
+        draggables.forEach(draggable => {
+            // El evento 'dragstart' se dispara cuando el usuario comienza a arrastrar un elemento
+            draggable.addEventListener('dragstart', () => {
+                // Añadimos la clase 'dragging' para aplicar los estilos visuales
+                draggable.classList.add('dragging');
+            });
+
+            // El evento 'dragend' se dispara cuando el usuario suelta el elemento
+            draggable.addEventListener('dragend', () => {
+                // Removemos la clase 'dragging' para restaurar los estilos normales
+                draggable.classList.remove('dragging');
+            });
+        });
+
+        // Configuramos los eventos para las zonas donde se pueden soltar elementos
+        dropZones.forEach(zone => {
+            // El evento 'dragover' se dispara continuamente mientras un elemento está sobre la zona
+            zone.addEventListener('dragover', e => {
+                // preventDefault() es necesario para permitir soltar elementos
+                e.preventDefault();
+                // Añadimos la clase 'dragover' para el feedback visual
+                zone.classList.add('dragover');
+            });
+
+            // 'dragleave' se dispara cuando el elemento arrastrado sale de la zona
+            zone.addEventListener('dragleave', () => {
+                // Removemos el feedback visual
+                zone.classList.remove('dragover');
+            });
+
+            // 'drop' se dispara cuando el usuario suelta un elemento en la zona
+            zone.addEventListener('drop', e => {
+                // Prevenimos el comportamiento por defecto del navegador
+                e.preventDefault();
+                // Removemos el feedback visual
+                zone.classList.remove('dragover');
+
+                // Obtenemos el elemento que está siendo arrastrado
+                // (será el único con la clase 'dragging' en ese momento)
+                const draggable = document.querySelector('.dragging');
+
+                // Movemos el elemento a la nueva zona
+                // appendChild() moverá el elemento si ya existe en el DOM
+                zone.appendChild(draggable);
+            });
+        });
+    </script>
+</body>
+
+</html>

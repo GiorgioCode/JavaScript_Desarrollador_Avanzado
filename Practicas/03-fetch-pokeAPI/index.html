@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Explorer</title>
+    <!-- Importamos Bootstrap para el diseño responsive y componentes UI -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Efecto de elevación suave al pasar el mouse por las cards */
+        .pokemon-card:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s;
+        }
+
+        /* Asegura que los tipos de Pokémon siempre empiecen con mayúscula */
+        .type-badge {
+            text-transform: capitalize;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Pokémon Explorer</h1>
+
+        <!-- Botones para cambiar entre diferentes tipos de datos -->
+        <div class="d-flex justify-content-center gap-3 mb-4">
+            <button onclick="loadPokemons('pokemon')" class="btn btn-primary">Pokémon</button>
+            <button onclick="loadPokemons('berry')" class="btn btn-success">Bayas</button>
+            <button onclick="loadPokemons('item')" class="btn btn-warning">Items</button>
+        </div>
+
+        <!-- Barra de búsqueda para filtrar resultados -->
+        <div class="row mb-4">
+            <div class="col-md-6 mx-auto">
+                <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre..."
+                    onkeyup="filterCards()">
+            </div>
+        </div>
+
+        <!-- Contenedor principal donde se mostrarán las cards -->
+        <div id="dataCards" class="row g-4">
+            <!-- Las cards se insertarán aquí dinámicamente -->
+        </div>
+
+        <!-- Controles de paginación -->
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <button onclick="previousPage()" class="btn btn-secondary" id="prevBtn">Anterior</button>
+            <button onclick="nextPage()" class="btn btn-secondary" id="nextBtn">Siguiente</button>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales para mantener el estado de la aplicación
+        let currentOffset = 0;        // Controla la paginación
+        let currentType = 'pokemon';  // Tipo de datos actual
+        let currentData = [];         // Almacena los resultados actuales
+
+        // Función principal para cargar datos de la PokeAPI
+        async function loadPokemons(type = 'pokemon', offset = 0) {
+            const container = document.getElementById('dataCards');
+            // Muestra un spinner mientras se cargan los datos
+            container.innerHTML = '<div class="col-12 text-center"><div class="spinner-border" role="status"></div></div>';
+            currentType = type;
+            currentOffset = offset;
+
+            try {
+                // Realiza la petición inicial para obtener la lista de elementos
+                const response = await fetch(`https://pokeapi.co/api/v2/${type}?offset=${offset}&limit=12`);
+                const data = await response.json();
+                currentData = data.results;
+
+                container.innerHTML = '';
+
+                // Por cada elemento en la lista, obtiene los detalles completos
+                for (const item of data.results) {
+                    const detailResponse = await fetch(item.url);
+                    const details = await detailResponse.json();
+                    container.innerHTML += await generateCard(details, type);
+                }
+
+                // Actualiza el estado de los botones de paginación
+                document.getElementById('prevBtn').disabled = offset === 0;
+                document.getElementById('nextBtn').disabled = !data.next;
+            } catch (error) {
+                console.error(`Error al cargar ${type}:`, error);
+                // Muestra un mensaje de error si algo falla
+                container.innerHTML = `
+                    <div class="col-12 text-center">
+                        <div class="alert alert-danger">
+                            Error al cargar los datos. Por favor, intenta nuevamente.
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Función para generar el HTML de cada card según el tipo de dato
+        async function generateCard(item, type) {
+            switch (type) {
+                case 'pokemon':
+                    // Card para Pokémon con imagen, tipos y estadísticas
+                    return `
+                        <div class="col-md-4 pokemon-card" data-name="${item.name}">
+                            <div class="card h-100 shadow-sm">
+                                <!-- Usa la imagen oficial de alta calidad si está disponible -->
+                                <img src="${item.sprites.other['official-artwork'].front_default || item.sprites.front_default}" 
+                                     class="card-img-top p-3" alt="${item.name}">
+                                <div class="card-body">
+                                    <h5 class="card-title text-capitalize">${item.name}</h5>
+                                    <!-- Muestra los tipos del Pokémon como badges -->
+                                    <div class="mb-2">
+                                        ${item.types.map(type =>
+                        `<span class="badge bg-primary me-1 type-badge">${type.type.name}</span>`
+                    ).join('')}
+                                    </div>
+                                    <p class="card-text">
+                                        <strong>Altura:</strong> ${item.height / 10}m<br>
+                                        <strong>Peso:</strong> ${item.weight / 10}kg<br>
+                                        <strong>Experiencia base:</strong> ${item.base_experience}
+                                    </p>
+                                </div>
+                                <!-- Barra de progreso para mostrar los HP -->
+                                <div class="card-footer bg-transparent">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" 
+                                             style="width: ${item.stats[0].base_stat}%" 
+                                             aria-valuenow="${item.stats[0].base_stat}" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">
+                                            HP: ${item.stats[0].base_stat}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'berry':
+                    // Card para bayas con información de crecimiento
+                    return `
+                        <div class="col-md-4 pokemon-card" data-name="${item.name}">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title text-capitalize">${item.name}</h5>
+                                    <p class="card-text">
+                                        <strong>Tiempo de crecimiento:</strong> ${item.growth_time} horas<br>
+                                        <strong>Tamaño máximo:</strong> ${item.size}cm<br>
+                                        <strong>Firmeza:</strong> ${item.firmness.name}
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <button class="btn btn-success btn-sm">Ver detalles</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'item':
+                    // Card para items con imagen y descripción
+                    return `
+                        <div class="col-md-4 pokemon-card" data-name="${item.name}">
+                            <div class="card h-100 shadow-sm">
+                                <img src="${item.sprites.default}" class="card-img-top p-3" alt="${item.name}"
+                                     style="max-height: 200px; object-fit: contain;">
+                                <div class="card-body">
+                                    <h5 class="card-title text-capitalize">${item.name}</h5>
+                                    <p class="card-text">
+                                        <strong>Categoría:</strong> ${item.category.name}<br>
+                                        <strong>Costo:</strong> ${item.cost} PokéDólares
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <small class="text-muted">${item.effect_entries[0]?.short_effect || 'Sin descripción disponible'}</small>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            }
+        }
+
+        // Función para filtrar las cards según el texto de búsqueda
+        function filterCards() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.pokemon-card');
+
+            cards.forEach(card => {
+                const name = card.dataset.name;
+                // Muestra u oculta las cards según si coinciden con la búsqueda
+                if (name.includes(searchTerm)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Funciones de paginación
+        function nextPage() {
+            loadPokemons(currentType, currentOffset + 12);
+        }
+
+        function previousPage() {
+            if (currentOffset >= 12) {
+                loadPokemons(currentType, currentOffset - 12);
+            }
+        }
+
+        // Inicializa la aplicación cargando Pokémon cuando la página está lista
+        document.addEventListener('DOMContentLoaded', () => loadPokemons('pokemon'));
+    </script>
+
+    <!-- Script de Bootstrap para funcionalidades adicionales -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop (2)</title>
+    <style>
+        body {
+            font-family: Arial, Verdana, sans-serif;
+        }
+
+        #piezas {
+            display: flex;
+            flex-wrap: wrap;
+            width: 620px;
+            margin: auto;
+            justify-content: center;
+        }
+
+        #puzzle {
+            border: 1px solid black;
+            width: 612px;
+            height: 348px;
+            display: flex;
+            flex-wrap: wrap;
+            margin: auto;
+        }
+
+        .pieza {
+            width: 204px;
+            height: 136px;
+            background-size: cover;
+            margin: 10px;
+        }
+
+        .placeholder {
+            background-color: #373535b6;
+            outline: 1px solid #333;
+            width: 204px;
+            height: 136px;
+            transition: 1s;
+        }
+
+        .placeholder.hover {
+            background-color: rgba(167, 165, 162, 0.645);
+        }
+
+        .placeholder .pieza {
+            margin: 0;
+        }
+
+        #mensaje {
+            color: black;
+            text-align: center;
+            display: none;
+        }
+
+        .ganaste {
+            background-color: #B3D67C;
+        }
+
+        .ganaste #mensaje {
+            display: block;
+        }
+
+        .ganaste .placeholder {
+            outline: none;
+        }
+
+        .ganaste #piezas {
+            display: none;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="puzzle"></div>
+        <div id="piezas"></div>
+    </div>
+    <h1 id="mensaje">¡Ganaste!</h1>
+
+
+    <script>
+        // Array con los nombres de las imágenes que formarán el puzzle
+        const imagenes = [
+            'imagen-0', 'imagen-1', 'imagen-2',
+            'imagen-3', 'imagen-4', 'imagen-5',
+            'imagen-6', 'imagen-7', 'imagen-8'
+        ];
+
+        // Obtener referencias a los elementos del DOM
+        const puzzle = document.getElementById('puzzle');
+        const piezas = document.getElementById('piezas');
+        const mensaje = document.getElementById('mensaje');
+
+        // Contador para saber cuántas piezas faltan por colocar correctamente
+        let terminado = imagenes.length;
+
+        // Crear y distribuir aleatoriamente las piezas del puzzle
+        while (imagenes.length) {
+            // Generar un índice aleatorio
+            const index = Math.floor(Math.random() * imagenes.length);
+
+            // Crear el elemento div para la pieza
+            const div = document.createElement('div');
+            div.className = 'pieza';
+            div.id = imagenes[index];
+            div.draggable = true; // Hacer que la pieza sea arrastrable
+            div.style.backgroundImage = `url("recursos/${imagenes[index]}.jpg")`;
+
+            // Agregar la pieza al contenedor de piezas
+            piezas.appendChild(div);
+
+            // Eliminar la imagen ya utilizada del array
+            imagenes.splice(index, 1);
+        }
+
+        // Crear los espacios donde se colocarán las piezas
+        for (let i = 0; i < terminado; i++) {
+            const div = document.createElement('div');
+            div.className = 'placeholder';
+            div.dataset.id = i; // Asignar un identificador para saber qué pieza va en cada espacio
+            puzzle.appendChild(div);
+        }
+
+        // Evento cuando se empieza a arrastrar una pieza
+        piezas.addEventListener('dragstart', e => {
+            // Guardar el ID de la pieza que se está arrastrando
+            e.dataTransfer.setData('id', e.target.id);
+        });
+
+        // Evento mientras se arrastra sobre un espacio válido
+        puzzle.addEventListener('dragover', e => {
+            e.preventDefault(); // Permitir que se pueda soltar en esta área
+            e.target.classList.add('hover'); // Efecto visual al pasar por encima
+        });
+
+        // Evento cuando se deja de arrastrar sobre un espacio
+        puzzle.addEventListener('dragleave', e => {
+            e.target.classList.remove('hover'); // Quitar efecto visual
+        });
+
+        // Evento cuando se suelta una pieza
+        puzzle.addEventListener('drop', e => {
+            e.target.classList.remove('hover'); // Quitar efecto visual
+
+            // Obtener el ID de la pieza arrastrada
+            const id = e.dataTransfer.getData('id');
+            // Extraer el número de la imagen del ID
+            const numero = id.split('-')[1];
+
+            // Verificar si la pieza se soltó en el lugar correcto
+            if (e.target.dataset.id === numero) {
+                // Colocar la pieza en su lugar
+                e.target.appendChild(document.getElementById(id));
+
+                // Reducir el contador de piezas pendientes
+                terminado--;
+
+                // Si no quedan piezas por colocar, mostrar mensaje de victoria
+                if (terminado === 0) {
+                    document.body.classList.add('ganaste');
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>

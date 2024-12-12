@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo Fetch API</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">API Data Explorer</h1>
+
+        <!-- Botones de navegación -->
+        <div class="d-flex justify-content-center gap-3 mb-4">
+            <button onclick="loadData('users')" class="btn btn-primary">Usuarios</button>
+            <button onclick="loadData('posts')" class="btn btn-success">Posts</button>
+            <button onclick="loadData('photos')" class="btn btn-info">Fotos</button>
+            <button onclick="loadData('todos')" class="btn btn-warning">Tareas</button>
+        </div>
+
+        <div id="dataCards" class="row g-4">
+            <!-- Aquí se insertarán las cards dinámicamente -->
+        </div>
+    </div>
+
+    <script>
+        // Función principal para cargar datos
+        async function loadData(type = 'users') {
+            const container = document.getElementById('dataCards');
+            container.innerHTML = '<div class="col-12 text-center"><div class="spinner-border" role="status"></div></div>';
+
+            try {
+                const response = await fetch(`https://jsonplaceholder.typicode.com/${type}`);
+                const data = await response.json();
+
+                container.innerHTML = '';
+
+                // Limitar a 12 items para no sobrecargar la página
+                data.slice(0, 12).forEach(item => {
+                    container.innerHTML += generateCard(item, type);
+                });
+            } catch (error) {
+                console.error(`Error al cargar ${type}:`, error);
+                container.innerHTML = `
+                    <div class="col-12 text-center">
+                        <div class="alert alert-danger">
+                            Error al cargar los datos. Por favor, intenta nuevamente.
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Función para generar diferentes tipos de cards según el contenido
+        function generateCard(item, type) {
+            switch (type) {
+                case 'users':
+                    return `
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">${item.name}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">@${item.username}</h6>
+                                    <p class="card-text">
+                                        <strong>Email:</strong> ${item.email}<br>
+                                        <strong>Teléfono:</strong> ${item.phone}<br>
+                                        <strong>Empresa:</strong> ${item.company.name}
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <a href="mailto:${item.email}" class="btn btn-primary">Contactar</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'posts':
+                    return `
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">${item.title}</h5>
+                                    <p class="card-text">${item.body}</p>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <button class="btn btn-success">Ver comentarios</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'photos':
+                    return `
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm">
+                                <img src="${item.thumbnailUrl}" class="card-img-top" alt="${item.title}">
+                                <div class="card-body">
+                                    <h5 class="card-title">Foto #${item.id}</h5>
+                                    <p class="card-text">${item.title}</p>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <a href="${item.url}" target="_blank" class="btn btn-info">Ver imagen completa</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'todos':
+                    return `
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">Tarea #${item.id}</h5>
+                                    <p class="card-text">${item.title}</p>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" ${item.completed ? 'checked' : ''}>
+                                        <label class="form-check-label">
+                                            ${item.completed ? 'Completada' : 'Pendiente'}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            }
+        }
+
+        // Cargar usuarios por defecto cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', () => loadData('users'));
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

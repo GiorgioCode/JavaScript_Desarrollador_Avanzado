@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag-Drop intro</title>
+    <style>
+        img {
+            width: 250px;
+        }
+
+        #caja {
+            background-color: black;
+            width: 100px;
+            height: 100px;
+            border-radius: 1rem;
+            border-width: 4px;
+            border-color: black;
+            border-style: dashed;
+            margin: 1rem;
+        }
+
+        #contenedor {
+            background-color: rgb(236, 211, 48);
+            width: 300px;
+            height: 300px;
+            border-radius: 1rem;
+            border-width: 4px;
+            border-color: black;
+            border-style: dashed;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Drag and Drop intro</h1>
+    <img src="caniche.jpg" alt="" srcset="">
+    <hr>
+    <div id="caja" draggable="true">
+    </div>
+    <hr>
+    <div id="contenedor"></div>
+
+
+    <script>
+        let caja = document.getElementById("caja")
+        let contenedor = document.getElementById("contenedor")
+
+        caja.addEventListener("dragstart", () => {
+            console.log("Se inicia movimiento de la caja")
+        })
+
+        caja.addEventListener("drag", () => {
+            console.log("La caja se mueve")
+        })
+
+        caja.addEventListener("dragend", () => {
+            console.log("Finaliza movimiento de caja")
+        })
+
+        contenedor.addEventListener("dragenter", () => {
+            console.log("La caja entró al contenedor")
+        })
+
+        contenedor.addEventListener("dragleave", () => {
+            console.log("La caja salió del contenedor")
+        })
+        contenedor.addEventListener("dragover", (e) => {
+            e.preventDefault()
+            console.log("La caja está sobre el contenedor")
+        })
+
+        contenedor.addEventListener("drop", () => {
+            console.log("La caja fue soltada dentro del contenedor")
+            contenedor.appendChild(caja)
+        })
+    </script>
+</body>
+
+</html>
