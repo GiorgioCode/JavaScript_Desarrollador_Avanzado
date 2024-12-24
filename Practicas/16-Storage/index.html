@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>ejemplo uso de localstorage y sessionStorage</h1>
+    <script>
+
+
+        // LocalStorage example - persists after browser close
+        // Saving user preferences
+        localStorage.setItem('theme', 'dark');
+        localStorage.setItem('language', 'es');
+
+        // Later retrieving preferences
+        const theme = localStorage.getItem('theme'); // 'dark'
+        const lang = localStorage.getItem('language'); // 'es'
+
+        // Removing single item
+        localStorage.removeItem('theme');
+
+        // Clear all
+        localStorage.clear();
+
+        // SessionStorage example - cleared after browser close
+        // Saving form data temporarily
+        sessionStorage.setItem('formData', JSON.stringify({
+            name: 'Juan',
+            email: 'juan@email.com'
+        }));
+
+        // Retrieving form data
+        const formData = JSON.parse(sessionStorage.getItem('formData'));
+        console.log(formData.name); // 'Juan'
+
+        // Check if data exists
+        if (sessionStorage.getItem('formData')) {
+            // Restore form data
+        }
+
+        // Length of stored items
+        console.log(sessionStorage.length); // 1
+    </script>
+</body>
+
+</html>

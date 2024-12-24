@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Babel via CDN</title>
+    <!-- Babel Standalone CDN -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <!-- Código usando características modernas de JS -->
+    <script type="text/babel">
+        // Clase ES6+
+        class Greeting {
+            constructor(name) {
+                this.name = name;
+            }
+
+            sayHello = () => {
+                return `¡Hola ${this.name}!`;
+            }
+        }
+
+        // Arrow function y template literal
+        const displayGreeting = (name) => {
+            const greeting = new Greeting(name);
+            const element = document.getElementById('app');
+            element.innerHTML = greeting.sayHello();
+        }
+
+        // Async/await
+        async function init() {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            displayGreeting('Usuario');
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
