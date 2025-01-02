@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Archivos</title>
+    <style>
+        /* Estilos para la zona de drop */
+        .drop-zone {
+            width: 300px;
+            height: 200px;
+            border: 2px dashed #ccc;
+            text-align: center;
+            padding: 20px;
+            margin: 20px auto;
+        }
+
+        /* Estilo cuando se arrastra un archivo sobre la zona */
+        .drop-zone.dragover {
+            background-color: #ebc156;
+            border-color: #f9da2e;
+        }
+
+        /* Contenedor de la barra de progreso */
+        .progress-bar {
+            width: 300px;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            margin: 20px auto;
+            overflow: hidden;
+            display: none;
+            /* Inicialmente oculta */
+        }
+
+        /* Barra de progreso interna */
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #4CAF50;
+            transition: width 0.3s ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Zona para arrastrar y soltar archivos -->
+    <div class="drop-zone" id="dropZone">
+        Arrastra y suelta archivos aquí o haz clic para seleccionar
+        <input type="file" id="fileInput" style="display: none;">
+    </div>
+
+    <!-- Barra de progreso -->
+    <div class="progress-bar" id="progressBar">
+        <div class="progress" id="progress"></div>
+    </div>
+
+    <script>
+        // Obtenemos referencias a los elementos del DOM
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const progressBar = document.getElementById('progressBar');
+        const progress = document.getElementById('progress');
+
+        // Evento cuando se arrastra un archivo sobre la zona
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();  // Previene el comportamiento por defecto
+            dropZone.classList.add('dragover');  // Agrega clase para feedback visual
+        });
+
+        // Evento cuando el archivo sale de la zona de drop
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');  // Remueve el feedback visual
+        });
+
+        // Evento cuando se suelta un archivo en la zona
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();  // Previene el comportamiento por defecto
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;  // Obtiene los archivos soltados
+            if (files.length > 0) {
+                uploadFile(files[0]);  // Sube el primer archivo
+            }
+        });
+
+        // Evento para permitir selección de archivo haciendo clic
+        dropZone.addEventListener('click', () => {
+            fileInput.click();  // Simula clic en el input file oculto
+        });
+
+        // Evento cuando se selecciona un archivo mediante el diálogo
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                uploadFile(fileInput.files[0]);  // Sube el archivo seleccionado
+            }
+        });
+
+        // Función para subir el archivo al servidor
+        function uploadFile(file) {
+            // Crear objeto FormData para enviar el archivo
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Mostrar y resetear la barra de progreso
+            progressBar.style.display = 'block';
+            progress.style.width = '0%';
+
+            // Crear y configurar la petición AJAX
+            const xhr = new XMLHttpRequest();
+
+            // Evento para actualizar la barra de progreso
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) {
+                    // Calcular y mostrar el porcentaje de progreso
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    progress.style.width = percentComplete + '%';
+                }
+            });
+
+            // Evento cuando la subida se completa
+            xhr.addEventListener('load', () => {
+                if (xhr.status === 200) {
+                    alert('Archivo subido correctamente');
+                } else {
+                    alert('Error al subir el archivo');
+                }
+                // Ocultar la barra de progreso después de 1 segundo
+                setTimeout(() => {
+                    progressBar.style.display = 'none';
+                    progress.style.width = '0%';
+                }, 1000);
+            });
+
+            // Evento en caso de error en la subida
+            xhr.addEventListener('error', () => {
+                alert('Error al subir el archivo');
+                progressBar.style.display = 'none';
+            });
+
+            // Configurar y enviar la petición
+            xhr.open('POST', 'http://localhost:3000/upload', true);
+            xhr.send(formData);
+        }
+    </script>
+</body>
+
+</html>
