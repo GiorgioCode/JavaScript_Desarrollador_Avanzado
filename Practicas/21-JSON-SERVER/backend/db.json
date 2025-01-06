@@ -1,0 +1,28 @@
+{
+  "usuarios": [
+    {
+      "id": "2",
+      "nombre": "Mario Pereyra",
+      "email": "mpereyra@xmail.com",
+      "rol": "admin"
+    },
+    {
+      "id": "890c",
+      "nombre": "Ode",
+      "email": "ode@gmail.com",
+      "rol": "admin"
+    }
+  ],
+  "productos": [
+    {
+      "id": "01",
+      "marca": "manaos",
+      "size": "2.0l"
+    },
+    {
+      "id": "02",
+      "marca": "coca zero",
+      "size": "2.25l"
+    }
+  ]
+}

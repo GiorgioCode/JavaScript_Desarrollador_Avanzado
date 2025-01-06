@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            padding: 10px;
+            border: 1px solid red;
+            border-radius: 4px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Lista de Usuarios</h1>
+
+    <button class="button" id="mostrarFormulario">Agregar Usuario</button>
+
+    <!-- Formulario para agregar usuario -->
+    <div id="formularioUsuario" class="card" style="display: none;">
+        <h2>Nuevo Usuario</h2>
+        <form id="formUsuario">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="rol">Rol:</label>
+                <input type="text" id="rol" value="usuario">
+            </div>
+            <button type="submit" class="button">Guardar</button>
+        </form>
+    </div>
+
+    <div id="error" class="error"></div>
+    <div id="loading" class="loading">Cargando usuarios...</div>
+    <div id="usuarios"></div>
+
+    <script>
+        const API_URL = 'http://localhost:3001';
+        const usuariosContainer = document.getElementById('usuarios');
+        const loadingElement = document.getElementById('loading');
+        const errorElement = document.getElementById('error');
+        const formularioUsuario = document.getElementById('formularioUsuario');
+        const formUsuario = document.getElementById('formUsuario');
+        const btnMostrarFormulario = document.getElementById('mostrarFormulario');
+
+        // Mostrar/ocultar formulario
+        btnMostrarFormulario.addEventListener('click', () => {
+            formularioUsuario.style.display = formularioUsuario.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Manejar envío del formulario
+        formUsuario.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nuevoUsuario = {
+                nombre: document.getElementById('nombre').value,
+                email: document.getElementById('email').value,
+                rol: document.getElementById('rol').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/usuarios`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(nuevoUsuario)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al crear usuario');
+                }
+
+                // Limpiar formulario y ocultarlo
+                formUsuario.reset();
+                formularioUsuario.style.display = 'none';
+
+                // Recargar lista de usuarios
+                cargarUsuarios();
+            } catch (error) {
+                mostrarError(error.message);
+            }
+        });
+
+        // Función para mostrar error
+        function mostrarError(mensaje) {
+            errorElement.textContent = mensaje;
+            errorElement.style.display = 'block';
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 3000);
+        }
+
+        // Función para mostrar loading
+        function toggleLoading(show) {
+            loadingElement.style.display = show ? 'block' : 'none';
+        }
+
+        // Función para eliminar usuario
+        async function eliminarUsuario(id) {
+            try {
+                const response = await fetch(`${API_URL}/usuarios/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al eliminar usuario');
+                }
+
+                cargarUsuarios();
+            } catch (error) {
+                mostrarError(error.message);
+            }
+        }
+
+        // Función para crear el HTML de un usuario
+        function crearCardUsuario(usuario) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <h3>${usuario.nombre}</h3>
+                <p>Email: ${usuario.email}</p>
+                <p>Rol: ${usuario.rol}</p>
+                <button onclick="eliminarUsuario(${usuario.id})" class="button" style="background-color: #ff4444;">
+                    Eliminar
+                </button>
+            `;
+            return card;
+        }
+
+        // Función para cargar usuarios
+        async function cargarUsuarios() {
+            toggleLoading(true);
+            try {
+                const response = await fetch(`${API_URL}/usuarios`);
+                if (!response.ok) {
+                    throw new Error('Error al cargar usuarios');
+                }
+
+                const usuarios = await response.json();
+                usuariosContainer.innerHTML = '';
+                usuarios.forEach(usuario => {
+                    usuariosContainer.appendChild(crearCardUsuario(usuario));
+                });
+            } catch (error) {
+                mostrarError(error.message);
+            } finally {
+                toggleLoading(false);
+            }
+        }
+
+        // Cargar usuarios al iniciar
+        cargarUsuarios();
+    </script>
+</body>
+
+</html>
