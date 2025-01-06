@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script defer src="main.js"></script>
+    <title>KANBAN DRAG AND DROP</title>
+</head>
+
+<body>
+    <div class="container-fluid p-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="mb-3">Mi Tablero Kanban</h1>
+                <button class="btn btn-primary" onclick="showAddTaskForm()">
+                    + Añadir Tarea
+                </button>
+            </div>
+        </div>
+
+        <!-- Tablero Kanban -->
+        <div class="row">
+            <!-- Columna: Por hacer -->
+            <div class="col-md-4">
+                <div class="kanban-column" data-column="todo">
+                    <h3 class="text-center mb-3">
+                        Por hacer
+                        <span class="task-counter">(0)</span>
+                    </h3>
+                    <div class="task-list"></div>
+                </div>
+            </div>
+
+            <!-- Columna: En progreso -->
+            <div class="col-md-4">
+                <div class="kanban-column" data-column="inProgress">
+                    <h3 class="text-center mb-3">
+                        En progreso
+                        <span class="task-counter">(0)</span>
+                    </h3>
+                    <div class="task-list"></div>
+                </div>
+            </div>
+
+            <!-- Columna: Completado -->
+            <div class="col-md-4">
+                <div class="kanban-column" data-column="done">
+                    <h3 class="text-center mb-3">
+                        Completado
+                        <span class="task-counter">(0)</span>
+                    </h3>
+                    <div class="task-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para añadir tareas -->
+        <div class="modal fade" id="addTaskModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Añadir Nueva Tarea</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addTaskForm">
+                            <div class="mb-3">
+                                <label class="form-label">Título</label>
+                                <input type="text" class="form-control" id="taskTitle" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Descripción</label>
+                                <textarea class="form-control" id="taskDescription" rows="3"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Fecha de vencimiento</label>
+                                <input type="date" class="form-control" id="taskDueDate">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Prioridad</label>
+                                <select class="form-select" id="taskPriority">
+                                    <option value="low">Baja</option>
+                                    <option value="medium">Media</option>
+                                    <option value="high">Alta</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="addNewTask()">Añadir Tarea</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
