@@ -38,6 +38,48 @@
         { nombre: "Maria", calificaciones: [70, 72, 68, 74] },
     ]
 
+    function analizarEstudiantes(estudiantes) {
+        // 1. calcular promedios
+        const promedios = {}
+        for (let estudiante of estudiantes) {
+            let suma = 0
+            for (let nota of estudiante.calificaciones) {
+                suma += nota
+            }
+            promedios[estudiante.nombre] = suma / estudiante.calificaciones.length
+        }
+        // 2. Encontrar el mejor promedio
+        let mejorEstudiante = null;
+        let mejorPromedio = -1;
+        for (let nombre in promedios) {
+            if (promedios[nombre] > mejorPromedio) {
+                mejorPromedio = promedios[nombre]
+                mejorEstudiante = nombre
+            }
+        }
+        //Agrupar por categorias
+        const categorias = {
+            excelente: [],
+            bueno: [],
+            regular: [],
+            necesitaMejorar: []
+        }
+
+        for (let nombre in promedios) {
+            const promedio = promedios[nombre]
+            if (promedio >= 90) categorias.excelente.push(nombre)
+            else if (promedio >= 80) categorias.bueno.push(nombre)
+            else if (promedio >= 70) categorias.regular.push(nombre)
+            else categorias.necesitaMejorar.push(nombre)
+        }
+
+
+        console.log(promedios)
+        console.log(mejorEstudiante)
+        console.log(categorias)
+    }
+    analizarEstudiantes(estudiantes)
+
 </script>
 
 </html>
