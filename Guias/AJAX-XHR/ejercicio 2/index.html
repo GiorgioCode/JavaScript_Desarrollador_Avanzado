@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX con Barra de Progreso</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        #cargarDatos {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        #cargarDatos:hover {
+            background-color: #45a049;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #f3f3f3;
+            height: 25px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 4px;
+            width: 0%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: width 0.3s;
+        }
+
+        #dataTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #dataTable th,
+        #dataTable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #dataTable th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #dataTable tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #tableContainer {
+            display: none;
+        }
+
+        #error {
+            display: none;
+            color: white;
+            background-color: #f44336;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        .info {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-left: 4px solid #4CAF50;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Carga de Datos con Barra de Progreso</h1>
+
+    <div class="container">
+        <div class="info">
+            Este ejemplo carga datos de usuarios desde la API JSONPlaceholder y muestra el progreso durante la carga.
+            Los datos se procesarán y se mostrarán en una tabla HTML.
+        </div>
+
+        <button id="cargarDatos">Cargar Datos de Usuarios</button>
+
+        <div id="progress-container" class="progress-container">
+            <div id="progress-bar" class="progress-bar">0%</div>
+        </div>
+
+        <div id="error"></div>
+
+        <div id="tableContainer">
+            <h2>Datos de Usuarios</h2>
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Sitio Web</th>
+                        <th>Empresa</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Los datos se insertarán aquí -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
